@@ -95,6 +95,7 @@ class ArticleResource extends Resource
                     ->label('Дата публикации')
                     ->dateTime('d F Y')
                     ->searchable()
+                    ->toggleable()
                     ->sortable(),
                 TextColumn::make('tags.name')
                     ->badge()
