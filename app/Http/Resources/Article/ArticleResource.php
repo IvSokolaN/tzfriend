@@ -20,7 +20,7 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'preview_image' => asset($this->preview_image),
+            'preview_image' => $this->getPreviewImageUrl(),
             'published_at' => $this->published_at,
             'tags' => SimpleTagResource::collection($this->tags),
             'user_id' => SimpleUserResource::make($this->user),

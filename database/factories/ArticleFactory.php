@@ -20,7 +20,7 @@ class ArticleFactory extends Factory
         return [
             'title' => fake()->sentence(),
             'content' => fake()->paragraph(10),
-            'preview_image' => 'storage/images/articles/' . fake()->word() . '.jpg',
+            'preview_image' => 'images/articles/' . fake()->word() . '.jpg',
             'published_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }

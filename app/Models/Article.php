@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 
 class Article extends Model
 {
@@ -37,5 +38,17 @@ class Article extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPreviewImageUrl(): ?string
+    {
+        if (! $this->preview_image) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->preview_image);
     }
 }

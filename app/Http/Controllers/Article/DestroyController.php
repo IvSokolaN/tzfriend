@@ -7,22 +7,24 @@ use App\Http\Requests\Article\StoreRequest;
 use App\Http\Resources\Article\ArticleResource;
 use App\Models\Article;
 use App\Services\Article\ArticleService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Storage;
 
-class StoreController extends Controller
+class DestroyController extends Controller
 {
     /**
-     * @param StoreRequest $request
-     * @param ArticleService $articleService
-     * @return ArticleResource
+     * @param Article $article
+     * @return JsonResponse
      */
-    public function __invoke(StoreRequest $request, ArticleService $articleService): ArticleResource
+    public function __invoke(Article $article): JsonResponse
     {
-        $articleService->store($request);
-        $article = $articleService->getArticle();
+        $article->delete();
 
-        return ArticleResource::make($article);
+        return response()->json([
+            'success' => true,
+            'message' => 'Статья успешно удалена.',
+        ]);
     }
 }
