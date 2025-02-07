@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TagResource\Pages;
-use App\Filament\Resources\TagResource\RelationManagers;
-use App\Models\Tag;
+use App\Filament\Resources\RoleResource\Pages;
+use App\Filament\Resources\RoleResource\RelationManagers;
+use App\Models\Role;
 use App\Services\Filament\TableColumns;
 use Filament\Forms;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -16,24 +15,23 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TagResource extends Resource
+class RoleResource extends Resource
 {
-    protected static ?string $model = Tag::class;
+    protected static ?string $model = Role::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $activeNavigationIcon = 'heroicon-s-tag';
-    protected static ?string $navigationGroup = 'Контент';
-    protected static ?string $navigationLabel = 'Тэги';
-    protected static ?string $pluralLabel = 'Тэги';
-    protected static ?string $modelLabel = 'Тэг';
-
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $activeNavigationIcon = 'heroicon-s-rectangle-stack';
+    protected static ?string $navigationGroup = 'Пользователи';
+    protected static ?string $navigationLabel = 'Роли';
+    protected static ?string $pluralLabel = 'Роли';
+    protected static ?string $modelLabel = 'Роль';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->label('Тэг')
+                Forms\Components\TextInput::make('name')
+                    ->label('Название')
                     ->required()
                     ->unique()
                     ->maxLength(255),
@@ -45,7 +43,8 @@ class TagResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Тэг')
+                    ->label('Название')
+                    ->sortable()
                     ->searchable(),
                 TableColumns::getCreatedAtColumn(),
                 TableColumns::getUpdatedAtColumn(),
@@ -74,10 +73,10 @@ class TagResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTags::route('/'),
-            'create' => Pages\CreateTag::route('/create'),
-            'view' => Pages\ViewTag::route('/{record}'),
-            'edit' => Pages\EditTag::route('/{record}/edit'),
+            'index' => Pages\ListRoles::route('/'),
+            'create' => Pages\CreateRole::route('/create'),
+            'view' => Pages\ViewRole::route('/{record}'),
+            'edit' => Pages\EditRole::route('/{record}/edit'),
         ];
     }
 }

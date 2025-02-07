@@ -4,13 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\Filament\TableColumns;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -38,12 +41,34 @@ class UserResource extends Resource
                     ->label('Email')
                     ->email()
                     ->required()
+                    ->unique(ignoreRecord: true)
                     ->maxLength(255),
                 TextInput::make('password')
                     ->label('Пароль')
                     ->password()
-                    ->required()
+                    ->revealable()
+                    ->required(fn (string $operation): bool => $operation === 'create')
+                    ->dehydrated(fn (?string $state): bool => filled($state))
+                    ->confirmed()
+                    ->maxLength(255)
+                    ->validationMessages([
+                        'confirmed' => 'Пароли не совпадают',
+                        'required' => 'Пароль обязательно для заполнения',
+                        'max' => 'Пароль не должен превышать 255 символов',
+                    ]),
+                TextInput::make('password_confirmation')
+                    ->label('Повторите Пароль')
+                    ->password()
+                    ->revealable()
+                    ->required(fn (string $operation): bool => $operation === 'create')
                     ->maxLength(255),
+                Select::make('roles')
+                    ->label('Роли')
+                    ->multiple()
+                    ->options(Role::all()->pluck('name', 'id'))
+                    ->searchable()
+                    ->preload()
+                    ->relationship('roles', 'name'),
             ]);
     }
 
@@ -51,14 +76,18 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Имя')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label('Email')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('roles.name')
+                    ->label('Роли')
+                    ->badge()
+                    ->separator(','),
                 TableColumns::getCreatedAtColumn('Добавлен'),
                 TableColumns::getUpdatedAtColumn('Обновлен'),
             ])
