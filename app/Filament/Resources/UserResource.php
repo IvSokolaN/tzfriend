@@ -8,6 +8,10 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\Filament\TableColumns;
 use Filament\Forms;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -33,42 +37,58 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->label('Имя')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('email')
-                    ->label('Email')
-                    ->email()
-                    ->required()
-                    ->unique(ignoreRecord: true)
-                    ->maxLength(255),
-                TextInput::make('password')
-                    ->label('Пароль')
-                    ->password()
-                    ->revealable()
-                    ->required(fn (string $operation): bool => $operation === 'create')
-                    ->dehydrated(fn (?string $state): bool => filled($state))
-                    ->confirmed()
-                    ->maxLength(255)
-                    ->validationMessages([
-                        'confirmed' => 'Пароли не совпадают',
-                        'required' => 'Пароль обязательно для заполнения',
-                        'max' => 'Пароль не должен превышать 255 символов',
+                Grid::make()
+                    ->columns(4)
+                    ->schema([
+                        Section::make()
+                            ->columnSpan(3)
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Имя')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('email')
+                                    ->label('Email')
+                                    ->email()
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->maxLength(255),
+                                TextInput::make('password')
+                                    ->label('Пароль')
+                                    ->password()
+                                    ->revealable()
+                                    ->required(fn(string $operation): bool => $operation === 'create')
+                                    ->dehydrated(fn(?string $state): bool => filled($state))
+                                    ->confirmed()
+                                    ->maxLength(255)
+                                    ->validationMessages([
+                                        'confirmed' => 'Пароли не совпадают',
+                                        'required' => 'Пароль обязательно для заполнения',
+                                        'max' => 'Пароль не должен превышать 255 символов',
+                                    ]),
+                                TextInput::make('password_confirmation')
+                                    ->label('Повторите Пароль')
+                                    ->password()
+                                    ->revealable()
+                                    ->required(fn(string $operation): bool => $operation === 'create')
+                                    ->maxLength(255),
+                                Select::make('roles')
+                                    ->label('Роли')
+                                    ->multiple()
+                                    ->options(Role::all()->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->relationship('roles', 'name'),
+                            ]),
+                        Section::make()
+                            ->columnSpan(1)
+                            ->schema([
+                                FileUpload::make('image')
+                                    ->label('Аватар')
+                                    ->directory('images/users')
+                                    ->image(),
+                            ]),
                     ]),
-                TextInput::make('password_confirmation')
-                    ->label('Повторите Пароль')
-                    ->password()
-                    ->revealable()
-                    ->required(fn (string $operation): bool => $operation === 'create')
-                    ->maxLength(255),
-                Select::make('roles')
-                    ->label('Роли')
-                    ->multiple()
-                    ->options(Role::all()->pluck('name', 'id'))
-                    ->searchable()
-                    ->preload()
-                    ->relationship('roles', 'name'),
             ]);
     }
 
