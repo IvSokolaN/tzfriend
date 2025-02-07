@@ -51,4 +51,12 @@ class Article extends Model
 
         return Storage::disk('public')->url($this->preview_image);
     }
+
+    /**
+     * @return void
+     */
+    public function deletePreviewImage(): void
+    {
+        Storage::disk('public')->delete($this->preview_image);
+    }
 }

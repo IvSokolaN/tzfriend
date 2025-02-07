@@ -11,7 +11,7 @@ Route::prefix('/articles')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', \App\Http\Controllers\Article\StoreController::class)->name('articles.store');
-//        Route::put('/{article}', \App\Http\Controllers\Article\UpdateController::class)->name('articles.update');
+        Route::patch('/{article}', \App\Http\Controllers\Article\UpdateController::class)->name('articles.update');
         Route::delete('/{article}', \App\Http\Controllers\Article\DestroyController::class)->name('articles.destroy');
     });
 });
