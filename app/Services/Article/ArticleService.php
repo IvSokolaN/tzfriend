@@ -12,7 +12,12 @@ class ArticleService
 {
     private Article $article;
     private ?string $pathImage = null;
+    private int $userId;
 
+    public function __construct()
+    {
+        $this->userId = auth()->user()->id;
+    }
 
     /**
      * @param StoreRequest $request
@@ -20,7 +25,6 @@ class ArticleService
      */
     public function store(StoreRequest $request): void
     {
-        $userId = auth()->user()->id;
         $this->uploadImage($request->file('preview_image'));
 
         $this->article = Article::query()
@@ -29,7 +33,7 @@ class ArticleService
                 'content' => $request->string('content'),
                 'published_at' => $request->date('published_at'),
                 'preview_image' => $this->pathImage,
-                'user_id' => $userId,
+                'user_id' => $this->userId,
             ]);
 
         $this->article->tags()->sync($request->array('tags'));
@@ -50,6 +54,7 @@ class ArticleService
             'content' => $request->input('content') ?? $article->content,
             'published_at' => $request->input('published_at') ?? $article->published_at,
             'preview_image' => $this->pathImage,
+            'user_id' => $this->userId,
         ]);
 
         $article->tags()->sync($request->array('tags'));

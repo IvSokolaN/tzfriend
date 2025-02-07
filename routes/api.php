@@ -23,6 +23,6 @@ Route::prefix('/tags')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
 //        Route::post('/', \App\Http\Controllers\Tag\StoreController::class)->name('tags.store');
 //        Route::put('/{tag}', \App\Http\Controllers\Tag\UpdateController::class)->name('tags.update');
-//        Route::delete('/{tag}', \App\Http\Controllers\Tag\DestroyController::class)->name('tags.destroy');
+        Route::delete('/{tag}', \App\Http\Controllers\Tag\DestroyController::class)->name('tags.destroy');
     });
 });
