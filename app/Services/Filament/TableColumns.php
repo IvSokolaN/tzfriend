@@ -17,7 +17,7 @@ readonly class TableColumns
             ->label($label)
             ->placeholder('Никогда')
             ->dateTime('d F Y')
-            ->toggleable()
+            ->toggleable(isToggledHiddenByDefault: true)
             ->searchable(false)
             ->sortable();
     }
@@ -32,7 +32,7 @@ readonly class TableColumns
             ->label($label)
             ->placeholder('Никогда')
             ->dateTime('d F Y')
-            ->toggleable()
+            ->toggleable(isToggledHiddenByDefault: true)
             ->searchable(false)
             ->sortable();
     }

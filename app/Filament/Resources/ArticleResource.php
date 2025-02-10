@@ -98,6 +98,7 @@ class ArticleResource extends Resource
                     ->toggleable()
                     ->sortable(),
                 TextColumn::make('tags.name')
+                    ->label('Тэги')
                     ->badge()
                     ->separator(','),
                 TableColumns::getCreatedAtColumn(),
