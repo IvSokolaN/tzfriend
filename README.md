@@ -1,3 +1,5 @@
+Описание задачи находится в [TASK.md](https://github.com/IvSokolaN/tzfriend/blob/main/TASK.md).
+
 В проекте используется БД MySQL.
 
 # Запуск
